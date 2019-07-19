@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  mariadb:
+    image: mariadb/server:10.3
+    #image: mariadb:10.3
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypass
+    logging:
+      driver: syslog
+      options:
+        tag: "{{.DaemonName}}(image={{.ImageName}};name={{.Name}};id={{.ID}})"
+    networks:
+      - backend
+    restart: on-failure
+    volumes:
+     - /mnt/mysql:/var/lib/mysql
+    expose:
+      - 3306
+    ports:
+      - "3306:3306"
+
+networks:
+  backend:
+    driver: bridge
